@@ -1,104 +1,65 @@
+// script.js
+// Mobile Navigation Toggle
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
 
-// Typing Effect
-const typingText = document.querySelector(".typing-text");
-const cursor = document.querySelector(".typing-cursor");
-const phrases = ["A Frontend Developer ", "A UI/UX Designer ", "A Problem Solver "];
-let phraseIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
-let delay = 100;
-
-function typeEffect() {
-    const currentPhrase = phrases[phraseIndex];
-    
-    if (isDeleting) {
-        typingText.textContent = currentPhrase.substring(0, charIndex--);
-    } else {
-        typingText.textContent = currentPhrase.substring(0, charIndex++);
-    }
-
-    if (!isDeleting && charIndex === currentPhrase.length) {
-        isDeleting = true;
-        delay = 1000; // Wait before deleting
-    } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-        delay = 200;
-    } else {
-        delay = isDeleting ? 50 : 100;
-    }
-
-    setTimeout(typeEffect, delay);
+if (hamburger) {
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
 }
 
-document.addEventListener("DOMContentLoaded", typeEffect);
-
-const hamburger = document.querySelector(".hamburger");
-const navLinks = document.querySelector(".nav-links");
-
-hamburger.addEventListener("click", () => {
-  navLinks.classList.toggle("active");
-  hamburger.classList.toggle("open");
+// Close mobile menu when a link is clicked
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+    });
 });
 
-navLinks.querySelectorAll("a").forEach(link => {
-  link.addEventListener("click", () => {
-    navLinks.classList.remove("active");
-    hamburger.classList.remove("open");
-  });
-});
+// Contact Form Submission Handler
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert("✨ Thank you! I'll get back to you soon.");
+        contactForm.reset();
+    });
+}
 
-document.addEventListener("click", (e) => {
-  if (
-    !navLinks.contains(e.target) &&
-    !hamburger.contains(e.target)
-  ) {
-    navLinks.classList.remove("active");
-    hamburger.classList.remove("open");
-  }
-});
+// Typing Animation for Hero Section
+const typingSpan = document.querySelector('.typing-text');
+if (typingSpan) {
+    const roles = ["A Frontend Developer", "MERN Stack Dev", "Open Source Enthusiast"];
+    let idx = 0;
+    let charIdx = 0;
+    
+    function typeEffect() {
+        if (charIdx <= roles[idx].length) {
+            typingSpan.innerText = roles[idx].substring(0, charIdx);
+            charIdx++;
+            setTimeout(typeEffect, 100);
+        } else {
+            setTimeout(() => {
+                idx = (idx + 1) % roles.length;
+                charIdx = 0;
+                typeEffect();
+            }, 2200);
+        }
+    }
+    
+    typeEffect();
+}
 
-const animateOnScroll = () => {
-    const cards = document.querySelectorAll('.skill-card, .project-card, .profile-card');
-    const contact = document.querySelector('#contact');
-
-    // Animate all card elements
-    cards.forEach(el => {
-        const elTop = el.getBoundingClientRect().top;
-        const screenPos = window.innerHeight / 1.3;
-
-        if (elTop < screenPos) {
-            el.style.opacity = '1';
-            el.style.transform = 'translateY(0)';
+// Smooth scrolling for anchor links (optional enhancement)
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
         }
     });
-
-    // Animate #contact section
-    if (contact) {
-        const contactTop = contact.getBoundingClientRect().top;
-        const screenPos = window.innerHeight / 1.3;
-
-        if (contactTop < screenPos) {
-            contact.style.opacity = '1';
-            contact.style.transform = 'translateY(0)';
-        }
-    }
-};
-
-// Initial state
-document.querySelectorAll('.skill-card, .project-card, .profile-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
 });
-
-// Initial state for contact section
-const contact = document.querySelector('#contact');
-if (contact) {
-    contact.style.opacity = '0';
-    contact.style.transform = 'translateY(20px)';
-    contact.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-}
-
-window.addEventListener('scroll', animateOnScroll);
-window.addEventListener('load', animateOnScroll);
